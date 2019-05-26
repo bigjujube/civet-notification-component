@@ -1,64 +1,61 @@
 import React, { Component } from "react";
 import { isArray } from "./utils";
 import styled from "styled-components";
-interface NotificationProps {
+import {
+  MobileTopConatainer,
+  MobileBottomConatainer,
+  TopCenterContainer
+} from "./container-div";
+interface SnackBarProps {
   isMobile?: boolean;
   breakpoint?: number;
   types: any[];
-  onNotificationRemoval: () => void;
+  onSnackBarRemoval: () => void;
 }
-interface NotificationStates {
+interface SnackBarStates {
   isMobile: boolean;
   breakpoint: number;
-  notifications: any[];
+  snacks: any[];
   userDefinedTypes: any[];
   width: number;
 }
-enum NotificationType {
+export enum SnackBarType {
   SUCCESS = "success",
   ERROR = "error",
   DEFAULT = "default",
   INFO = "info",
   WARNING = "warning"
 }
-enum NotificationPos {
+export enum SnackBarPos {
   top = "TOP",
   bottom = "BOTTOM"
 }
-enum NotificationContainer {
+export enum SnackBarContainer {
   topLeft = "TOP_LEFT",
   topRight = "TOP_RIGHT",
   bottomLeft = "BOTTOM_LEFT",
   bottomRight = "BOTTOM_RIGHT"
 }
-interface NotificationOption {
+export interface SnackBarOption {
   id: string;
   title: string;
   message: string;
-  type: NotificationType;
-  insert: NotificationPos;
-  container: NotificationContainer;
+  type: SnackBarType;
+  insert: SnackBarPos;
+  container: SnackBarContainer;
+  content: React.ReactElement;
 }
 
 const BREAKPOINT = 768;
-const CLASSNMAE_PERFIX = "notification-root";
-const TopCenterContainer = styled.div`
-  position: fixed;
-  z-index: 8000;
-  transform: translateX(-50%);
-  top: 20px;
-  left: 50%;
-`;
-class ReactNotification extends Component<
-  NotificationProps,
-  NotificationStates
-> {
+const CLASSNMAE_PERFIX = "snackbar";
+
+class SnackBar extends Component<SnackBarProps, SnackBarStates> {
   static defaultProps = {
     isMobile: true,
     breakpoint: BREAKPOINT
   };
   state = {
-    notifications: [],
+    snacks: [],
     userDefinedTypes: [],
     isMobile: false,
     width: BREAKPOINT,
@@ -72,7 +69,24 @@ class ReactNotification extends Component<
       this.state.userDefinedTypes = this.props.types;
     }
   }
+  addSnack(snack: SnackBarOption) {
+    this.setState((prevState: SnackBarStates) => ({}));
+  }
   render() {
-    return <div />;
+    const { state, props } = this;
+    if (props.isMobile && state.width <= state.breakpoint) {
+      return (
+        <div className={`${CLASSNMAE_PERFIX}-conatainer-root`}>
+          <MobileTopConatainer />
+          <MobileBottomConatainer />
+        </div>
+      );
+    }
+    return (
+      <div className={`${CLASSNMAE_PERFIX}-container-root`}>
+        <TopCenterContainer />
+      </div>
+    );
   }
 }
+export default SnackBar;
